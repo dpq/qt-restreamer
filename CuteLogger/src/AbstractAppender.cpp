@@ -20,7 +20,8 @@
 
 AbstractAppender::AbstractAppender()
   : m_detailsLevel(Logger::Debug)
-{}
+{
+}
 
 
 AbstractAppender::~AbstractAppender()
