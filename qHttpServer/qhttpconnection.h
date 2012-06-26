@@ -43,7 +43,7 @@ class QHttpConnection : public QObject
     Q_OBJECT
 
 public:
-    QHttpConnection(int socketDescriptor, quint16 serverPort);
+    QHttpConnection(QString serverDomain,int socketDescriptor, quint16 serverPort);
     virtual ~QHttpConnection();
 
     qint64 write(const QByteArray &data);
@@ -88,7 +88,9 @@ private:
     QString m_currentHeaderField;
     QString m_currentHeaderValue;
 
+
     bool headerParced;
+    const QString m_serverDomain;
     QByteArray dataReaded;
 };
 

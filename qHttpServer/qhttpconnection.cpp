@@ -31,7 +31,7 @@
 #include "qhttprequest.h"
 #include "qhttpresponse.h"
 
-QHttpConnection::QHttpConnection(int socketDescriptor, quint16 serverPort)
+QHttpConnection::QHttpConnection(QString serverDomain,int socketDescriptor, quint16 serverPort)
     : QObject(NULL)
     , m_socket(NULL)
     , initializing(true)
@@ -39,6 +39,7 @@ QHttpConnection::QHttpConnection(int socketDescriptor, quint16 serverPort)
     , m_serverPort(serverPort)
     , m_parser(0)
     , headerParced(false)
+    ,m_serverDomain(serverDomain)
 {
    // qDebug() << "Got new connection" << socket->peerAddress() << socket->peerPort();
 
@@ -67,10 +68,10 @@ QHttpConnection::QHttpConnection(int socketDescriptor, quint16 serverPort)
          "<!DOCTYPE cross-domain-policy SYSTEM \"/xml/dtds/cross-domain-policy.dtd\">"\
          "<cross-domain-policy>"\
          "   <site-control permitted-cross-domain-policies=\"master-only\"/>"\
-         "   <allow-access-from domain=\"mcc.svoyaset.ru\" to-ports=\"*\" />"\
+         "   <allow-access-from domain=\"%1\" to-ports=\"*\" />"\
          "</cross-domain-policy>";
 
-
+//mcc.svoyaset.ru
 void QHttpConnection::init()
 {
     m_socket= new QTcpSocket(this);
@@ -148,7 +149,7 @@ void QHttpConnection::parseRequest()
         if(dataReaded.startsWith("<policy-file-request/>"))
         {
          //   QString toSend = flashPolicy.arg(m_serverPort);
-            m_socket->write(flashPolicy.toAscii());
+            m_socket->write(flashPolicy.arg(m_serverDomain).toAscii());
             m_socket->disconnectFromHost();
         }
         else

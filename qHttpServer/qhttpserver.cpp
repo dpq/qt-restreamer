@@ -36,6 +36,7 @@ QHash<int, QString> STATUS_CODES;
 QHttpServer::QHttpServer(RequestHandlerFactory requestHandler)
     : QTcpServer()
     ,threadPool(this)
+    ,serverDomain("localhost")
 {
     Q_ASSERT(requestHandler);
     this->requestHandler=requestHandler;
@@ -121,7 +122,7 @@ void QHttpServer::incomingConnection(int socketDescriptor)
     Q_ASSERT(requestHandler);
 
         QThread* t = threadPool.reserveThread();
-        QHttpConnection *connection = new QHttpConnection(socketDescriptor,serverPort());
+        QHttpConnection *connection = new QHttpConnection(serverDomain,socketDescriptor,serverPort());
         AbstractRequestHandler* r=requestHandler();
 
         connect(connection, SIGNAL(newRequest(QHttpRequest*, QHttpResponse*)),
@@ -141,6 +142,13 @@ void QHttpServer::incomingConnection(int socketDescriptor)
         disconnect(this,SIGNAL(initConnection()),connection,SLOT(init()));
 
 }
+
+
+void QHttpServer::setServerDomain(QString sdmn)
+{
+    serverDomain=sdmn;
+}
+
 
 bool QHttpServer::listen(quint16 port)
 {

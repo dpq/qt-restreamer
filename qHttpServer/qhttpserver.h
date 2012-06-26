@@ -122,6 +122,7 @@ public:
      * \sa AbstractRequestHandler
      */
     QHttpServer(RequestHandlerFactory requestHandler);
+    void setServerDomain(QString sdmn);
     virtual ~QHttpServer();
     /*!
      * Sets the request handler which will actually process requests.
@@ -233,6 +234,7 @@ signals:
     void closeAll();
 protected:
      void incomingConnection(int socketDescriptor);
+     QString serverDomain;
 //private slots:
   //  void newConnection();
    // void setThreadIdle( QThread* ); // removes thread from active threads and adds it to inactive.
