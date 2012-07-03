@@ -12,10 +12,20 @@ CONFIG += dll debug_and_release
 
 
 
-OBJECTS_DIR = ./gen/obj
+
 MOC_DIR = ./gen/moc
 RCC_DIR = ./gen/rcc
 UI_DIR = ./gen/ui
+
+
+CONFIG(release, debug|release) {
+    DESTDIR = ../release
+    OBJECTS_DIR = ./gen/release/obj
+}else{
+    DESTDIR = ../debug
+    OBJECTS_DIR = ./gen/debug/obj
+}
+
 
 INCLUDEPATH += ../http-parser
 

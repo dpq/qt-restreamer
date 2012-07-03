@@ -11,12 +11,24 @@ CONFIG += debug_and_release
 TEMPLATE = app
 
 
-OBJECTS_DIR = ./gen/obj
+
 MOC_DIR = ./gen/moc
 RCC_DIR = ./gen/rcc
 UI_DIR = ./gen/ui
 
-LIBS+= -L../qHttpServer -lqHttpServer -lLogger
+
+CONFIG(release, debug|release) {
+    DESTDIR = ../release
+    OBJECTS_DIR = ./gen/release/obj
+    LIBS+= -L../release -lqHttpServer -lLogger
+}else{
+    DESTDIR = ../debug
+    OBJECTS_DIR = ./gen/debug/obj
+    LIBS+= -L../debug -lqHttpServer -lLogger
+}
+
+
+
 
 
 

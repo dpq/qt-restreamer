@@ -15,7 +15,7 @@ Q_DECLARE_METATYPE(QAbstractSocket::SocketState)
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-
+    a.addLibraryPath(a.applicationDirPath());
     qRegisterMetaType<QAbstractSocket::SocketState>("QAbstractSocket::SocketState");
 
     ConsoleAppender* consoleAppender = new ConsoleAppender();
@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
     {
         s.setServerDomain(args[pos+1]);
     }
+
 
     bool res = s.listen(5001);
     LOG_INFO(QString("listen status: %1").arg(res));

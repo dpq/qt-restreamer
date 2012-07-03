@@ -35,8 +35,8 @@ QHash<int, QString> STATUS_CODES;
 
 QHttpServer::QHttpServer(RequestHandlerFactory requestHandler)
     : QTcpServer()
-    ,threadPool(this)
     ,serverDomain("localhost")
+    ,threadPool(this)
 {
     Q_ASSERT(requestHandler);
     this->requestHandler=requestHandler;
