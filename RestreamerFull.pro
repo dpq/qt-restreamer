@@ -3,5 +3,3 @@ SUBDIRS += \
  CuteLogger \
  qHttpServer \
  qtRestreamer
-
-

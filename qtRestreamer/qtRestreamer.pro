@@ -28,7 +28,8 @@ CONFIG(release, debug|release) {
 }
 
 
-
+target.path=/usr/local/bin
+INSTALLS+=target
 
 
 

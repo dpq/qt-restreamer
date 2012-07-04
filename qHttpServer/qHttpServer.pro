@@ -44,5 +44,5 @@ SOURCES = *.cpp ../http-parser/http_parser.c
 #MOC_DIR = $$_PRO_FILE_PWD_/build
 #DESTDIR = $$QHTTPSERVER_BASE/lib
 
-#target.path = $$QHTTPSERVER_BASE/lib
+target.path = /usr/local/lib
 INSTALLS += target
