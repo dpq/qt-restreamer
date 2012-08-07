@@ -17,7 +17,7 @@ Leecher::Leecher(QHttpResponse* resp, QString oid) :
 
 const int Leecher::MAX_BUFFER=65536;
 const int Leecher::MAX_FRAMES=3;
-const QString crlf = "\r\n";
+
 
 Leecher::~Leecher()
 {
@@ -39,8 +39,6 @@ void Leecher::sendToSocket()
             QByteArray frame=frames.takeFirst();
             socketBuffer+=frame.length();
             m_resp->write(frame);
-            socketBuffer+=2;
-            m_resp->write(crlf);
         }
     }
 }
