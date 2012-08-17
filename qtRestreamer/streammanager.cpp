@@ -92,16 +92,9 @@ void StreamManager::reconnectSeeder(AbstractSeeder* oldseeder,AbstractSeeder* ne
      if(activeControllers.contains(s))
      {
          sc=activeControllers[s];
-         if(sc->leechers.size()>0)
-         {
-            reconnectSeeder(sc->seeder,blankSeeder,sc->leechers);
-            sc->seeder=blankSeeder;
-         }
-         else
-         {
-             activeControllers.remove(s);
-             sc->deleteLater();
-         }
+
+         reconnectSeeder(sc->seeder,blankSeeder,sc->leechers);
+         sc->seeder=blankSeeder;
      }
  }
 
@@ -114,7 +107,6 @@ void StreamManager::reconnectSeeder(AbstractSeeder* oldseeder,AbstractSeeder* ne
      if(activeControllers.contains(s))
      {
          sc=activeControllers[s];
-         QObject::disconnect(sc->seeder,SIGNAL(data(QByteArray)),leecher,SLOT(data(QByteArray)));
          sc->leechers.removeAll(leecher);
          if(sc->leechers.size()<=0)
          {
