@@ -93,8 +93,17 @@ void StreamManager::reconnectSeeder(AbstractSeeder* oldseeder,AbstractSeeder* ne
      {
          sc=activeControllers[s];
 
-         reconnectSeeder(sc->seeder,blankSeeder,sc->leechers);
-         sc->seeder=blankSeeder;
+         if(sc->leechers.size()>0)
+         {
+            reconnectSeeder(sc->seeder,blankSeeder,sc->leechers);
+            sc->seeder=blankSeeder;
+         }
+         else
+         {
+             activeControllers.remove(s);
+             sc->deleteLater();
+         }
+
      }
  }
 
