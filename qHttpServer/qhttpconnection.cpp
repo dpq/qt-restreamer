@@ -28,6 +28,8 @@
 #include <QDebug>
 #include <QSemaphore>
 
+#include <sys/socket.h>
+
 #include "qhttprequest.h"
 #include "qhttpresponse.h"
 
@@ -75,6 +77,7 @@ QHttpConnection::QHttpConnection(QString serverDomain,int socketDescriptor, quin
 void QHttpConnection::init()
 {
     m_socket= new QTcpSocket(this);
+
     connect(m_socket, SIGNAL(readyRead()), this, SLOT(parseRequest()));
     connect(m_socket, SIGNAL(disconnected()), this, SLOT(socketDisconnected()));
     connect(m_socket, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(socketStateChanged(QAbstractSocket::SocketState)));
@@ -90,6 +93,40 @@ void QHttpConnection::init()
 
     }
 }
+
+
+void QHttpConnection::setReadTimeout(int milliSeconds)
+{
+    if(m_socket!= NULL)
+    {
+        int descriptor = m_socket->socketDescriptor();
+
+        struct timeval timeout;
+        timeout.tv_sec = milliSeconds/1000;
+        timeout.tv_usec = (milliSeconds%1000)*1000;
+        if (setsockopt (descriptor, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout,
+                    sizeof(timeout)) < 0)
+              qDebug()<<"Could not set socket read timeout!";
+
+    }
+}
+
+void QHttpConnection::setWriteTimeout(int milliSeconds)
+{
+    if(m_socket!= NULL)
+    {
+        int descriptor = m_socket->socketDescriptor();
+
+        struct timeval timeout;
+        timeout.tv_sec = milliSeconds/1000;
+        timeout.tv_usec = (milliSeconds%1000)*1000;
+        if (setsockopt (descriptor, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout,
+                    sizeof(timeout)) < 0)
+              qDebug()<<"Could not set socket read timeout!";
+
+    }
+}
+
 
 void QHttpConnection::socketStateChanged(QAbstractSocket::SocketState state)
 {

@@ -52,6 +52,7 @@ class QHttpResponse : public QObject
 
 public:
     virtual ~QHttpResponse();
+    inline QHttpConnection * getConnection()const{return m_connection;}
 
 public slots:
     /*!

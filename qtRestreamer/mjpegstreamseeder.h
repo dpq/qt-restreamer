@@ -2,6 +2,8 @@
 #define MJPEGSTREAMSEEDER_H
 
 #include "abstractseeder.h"
+#include <QTimer>
+#include <QTime>
 
 class QHttpRequest;
 
@@ -17,10 +19,14 @@ private:
     QByteArray newBoundary;
     int searchStart;
     QByteArray localMiniBuffer;
+    QTimer timeoutCheck;
+    QTime time;
 signals:
-    
+    void end();
 public slots:
     void onData(const QByteArray& data);
+protected slots:
+    void onTimeout();
 };
 
 #endif // MJPEGSTREAMSEEDER_H

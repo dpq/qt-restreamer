@@ -2,6 +2,8 @@
 #include <Logger.h>
 #include <qhttprequest.h>
 #include <qhttpresponse.h>
+#include <qhttpconnection.h>
+
 
 #include "leecher.h"
 #include "mjpegstreamseeder.h"
@@ -43,6 +45,7 @@ void RequestListener::processResponce(QHttpRequest* req, QHttpResponse* resp)
         else if (req->method()==QHttpRequest::POST)
         {
             new MJpegStreamSeeder(req,oid);
+          //  resp->getConnection()->setReadTimeout(10000);
             LOG_INFO("RequestListener - post connection");
         }
         else if(req->method()==QHttpRequest::TRACE)

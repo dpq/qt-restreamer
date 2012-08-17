@@ -10,6 +10,7 @@ MJpegStreamSeeder::MJpegStreamSeeder(QHttpRequest *request,QString oid) :
     setOid(oid);
     connect(request,SIGNAL(data(const QByteArray &)),this,SLOT(onData(QByteArray)));
     connect(request,SIGNAL(end()),this,SLOT(deleteLater()));
+    //connect(this,SIGNAL(end()),request,SIGNAL(end()));
 
     QByteArray ctype = request->header("content-type").toAscii();
     int bndnameid=ctype.indexOf("boundary=");
@@ -30,6 +31,10 @@ MJpegStreamSeeder::MJpegStreamSeeder(QHttpRequest *request,QString oid) :
         searchStart=newBoundary.length();
     }
     StreamManager::instance()->newSeeder(this);
+    connect(&timeoutCheck, SIGNAL(timeout()),this,SLOT(onTimeout()));
+    timeoutCheck.start(1000);
+    time.start();
+
 }
 
 
@@ -38,8 +43,16 @@ MJpegStreamSeeder::~MJpegStreamSeeder()
     StreamManager::instance()->seederGone(this);
 }
 
+void MJpegStreamSeeder::onTimeout()
+{
+    if(time.elapsed()>10000)
+        emit end();
+}
+
+
 void MJpegStreamSeeder::onData(const QByteArray& dat)
 {
+    time.restart();
     localMiniBuffer.append(dat);
     if(boundary.length())
     {

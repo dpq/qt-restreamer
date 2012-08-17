@@ -48,10 +48,13 @@ public:
 
     qint64 write(const QByteArray &data);
     void flush();
-
+    void setReadTimeout(int milliSeconds);
+    void setWriteTimeout(int milliSeconds);
 signals:
     void newRequest(QHttpRequest*, QHttpResponse*);
     void done(QThread*);
+private:
+
 private slots:
     void parseRequest();
     void responseDone();

@@ -53,10 +53,12 @@ HEADERS += \
     blanksquareseeder.h \
     streammanager.h \
     streampoint.h \
-    mjpegstreamseeder.h
+    mjpegstreamseeder.h \
+    ../http-parser/http_parser.h
 
 INCLUDEPATH += $$_PRO_FILE_PWD_/../CuteLogger/include \
-               $$_PRO_FILE_PWD_/../qHttpServer
+               $$_PRO_FILE_PWD_/../qHttpServer \
+               $$_PRO_FILE_PWD_/../http-parser
 
 INSTALLS += target
 
