@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "streampoint.h"
+#include "videoframe.h"
 
 class AbstractSeeder : public QObject, public StreamPoint
 {
@@ -14,7 +15,7 @@ public:
 protected:
 
 signals:
-    void data(QByteArray d);
+    void data(VideoFrame d);
 public slots:
     //void stop();
 };

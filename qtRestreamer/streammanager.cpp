@@ -53,8 +53,8 @@ void StreamManager::reconnectSeeder(AbstractSeeder* oldseeder,AbstractSeeder* ne
 {
     foreach (Leecher * l , leechers)
     {
-        QObject::disconnect(oldseeder,SIGNAL(data(QByteArray)),l,SLOT(data(QByteArray)));
-        QObject::connect(newseeder,SIGNAL(data(QByteArray)),l,SLOT(data(QByteArray)),Qt::QueuedConnection);
+        QObject::disconnect(oldseeder,SIGNAL(data(VideoFrame)),l,SLOT(data(VideoFrame)));
+        QObject::connect(newseeder,SIGNAL(data(VideoFrame)),l,SLOT(data(VideoFrame)),Qt::QueuedConnection);
     }
 }
 
@@ -79,7 +79,7 @@ void StreamManager::reconnectSeeder(AbstractSeeder* oldseeder,AbstractSeeder* ne
          activeControllers[s]=sc;
          sc->seeder=blankSeeder;
      }
-     QObject::connect(sc->seeder,SIGNAL(data(QByteArray)),leecher,SLOT(data(QByteArray)),Qt::QueuedConnection);
+     QObject::connect(sc->seeder,SIGNAL(data(VideoFrame)),leecher,SLOT(data(VideoFrame)),Qt::QueuedConnection);
      sc->leechers.append(leecher);
  }
 

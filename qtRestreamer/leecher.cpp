@@ -16,7 +16,7 @@ Leecher::Leecher(QHttpResponse* resp, QString oid) :
 
 
 const int Leecher::MAX_BUFFER=65536;
-const int Leecher::MAX_FRAMES=3;
+const int Leecher::MAX_FRAMES=1;
 
 
 Leecher::~Leecher()
@@ -36,17 +36,19 @@ void Leecher::sendToSocket()
     {
         if(frames.size())
         {
-            QByteArray frame=frames.takeFirst();
-            socketBuffer+=frame.length();
-            m_resp->write(frame);
+            VideoFrame d=frames.takeFirst();
+            socketBuffer+=d.getData().length();
+            m_resp->write(d.getData());
+            LOG_TRACE(QString("Frame passed. Size:%1 ,Time:%2").arg(d.getData().size()).arg(d.elapsed()));
         }
     }
 }
 
 
 
- void Leecher::data(QByteArray d)
+ void Leecher::data(VideoFrame d)
  {
+
 
      if(frames.size()<MAX_FRAMES)
      {
@@ -56,6 +58,7 @@ void Leecher::sendToSocket()
      {
          frames[MAX_FRAMES-1]=d;
      }
+
     sendToSocket();
 
  }

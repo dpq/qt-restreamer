@@ -5,6 +5,7 @@
 #include <QList>
 #include <QByteArray>
 #include "streampoint.h"
+#include "videoframe.h"
 
 class QHttpResponse;
 
@@ -19,14 +20,14 @@ signals:
 protected:
     QHttpResponse* m_resp;
    // QByteArray rawBuffer;
-    QList<QByteArray> frames;
+    QList<VideoFrame> frames;
     qint64 socketBuffer;
     static const int MAX_BUFFER;
     static const int MAX_FRAMES;
 
     void sendToSocket();
 public slots:
-   void data(QByteArray d);
+   void data(VideoFrame d);
    void bytesWritten(qint64 bw);
 };
 

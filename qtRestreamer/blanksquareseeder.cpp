@@ -29,5 +29,5 @@ const  QString BlankSquareSeeder::defaultPath = "/var/www/WhitePixel45w.jpg";
 
 void BlankSquareSeeder::onTimeout()
 {
-    emit data(oneImage);
+    emit data(VideoFrame(oneImage));
 }

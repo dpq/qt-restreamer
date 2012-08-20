@@ -54,7 +54,8 @@ HEADERS += \
     streammanager.h \
     streampoint.h \
     mjpegstreamseeder.h \
-    ../http-parser/http_parser.h
+    ../http-parser/http_parser.h \
+    videoframe.h
 
 INCLUDEPATH += $$_PRO_FILE_PWD_/../CuteLogger/include \
                $$_PRO_FILE_PWD_/../qHttpServer \

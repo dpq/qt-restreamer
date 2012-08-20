@@ -63,7 +63,7 @@ void MJpegStreamSeeder::onData(const QByteArray& dat)
             if(frame.length())
             {
                 //LOG_TRACE("Data: "+QString(frame.mid(0,10))+"..."+QString(frame.mid(frame.length()-11)));
-                 emit data(frame);
+                 emit data(VideoFrame(frame));
                 localMiniBuffer=localMiniBuffer.mid(bnd);
             }
             localMiniBuffer=localMiniBuffer.replace(0,boundary.length(),newBoundary);
