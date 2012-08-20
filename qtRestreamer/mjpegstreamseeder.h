@@ -21,6 +21,7 @@ private:
     QByteArray localMiniBuffer;
     QTimer timeoutCheck;
     QTime time;
+    int startTime;
 signals:
     void end();
 public slots:
