@@ -15,11 +15,11 @@ protected:
     QByteArray data;
     long startTimestamp;
 public:
-    inline const QByteArray getData()const{return data;}
+    inline QByteArray getData()const{return data;}
     inline void setData(QByteArray d)   {data=d;}
-    inline const long getTime()const{return startTimestamp;}
+    inline long getTime()const{return startTimestamp;}
     inline void setTime(long time)   {startTimestamp=time;}
-    inline const long elapsed()const{return QDateTime::currentMSecsSinceEpoch()-startTimestamp;}
+    inline long elapsed()const{return QDateTime::currentMSecsSinceEpoch()-startTimestamp;}
 };
 
 

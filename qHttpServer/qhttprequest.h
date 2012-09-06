@@ -66,6 +66,8 @@ class QHttpRequest : public QObject
     Q_PROPERTY(QString httpVersion   READ httpVersion);
 
 public:
+    void setReadTimeout(long msecs);
+
     virtual ~QHttpRequest();
 
     /*!

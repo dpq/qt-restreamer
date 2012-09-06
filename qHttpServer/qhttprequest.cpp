@@ -35,6 +35,12 @@ QHttpRequest::~QHttpRequest()
 {
 }
 
+void QHttpRequest::setReadTimeout(long msecs)
+{
+    m_connection->setReadTimeout(msecs);
+}
+
+
 const  QString QHttpRequest::DELETE="DELETE";
 const  QString QHttpRequest::GET="GET";
 const  QString QHttpRequest::HEAD="HEAD";

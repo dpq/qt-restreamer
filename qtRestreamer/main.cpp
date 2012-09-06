@@ -7,6 +7,7 @@
 #include <ConsoleAppender.h>
 #include <qhttpserver.h>
 #include "videoframe.h"
+#include "streammanager.h"
 #include <iostream>
 
 
@@ -45,6 +46,12 @@ int main(int argc, char *argv[])
     if((pos>=0)&&(pos<args.size()-1))
     {
         s.setServerDomain(args[pos+1]);
+    }
+
+    pos = args.indexOf("-d");
+    if((pos>=0)&&(pos<args.size()-1))
+    {
+        StreamManager::configPath=args[pos+1];
     }
 
     bool res = s.listen(5001);

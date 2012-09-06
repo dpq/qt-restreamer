@@ -52,7 +52,7 @@ class QHttpResponse : public QObject
 
 public:
     virtual ~QHttpResponse();
-    inline QHttpConnection * getConnection()const{return m_connection;}
+
 
 public slots:
     /*!
@@ -105,6 +105,11 @@ signals:
      */
     void done();
     void bytesWritten(qint64);
+public:
+    void setWriteTimeout(long msecs);
+
+
+
 private:
     QHttpResponse(QHttpConnection *connection);
 

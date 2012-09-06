@@ -39,6 +39,12 @@ QHttpResponse::QHttpResponse(QHttpConnection *connection)
 {
 }
 
+void QHttpResponse::setWriteTimeout(long msecs)
+{
+    m_connection->setWriteTimeout(msecs);
+}
+
+
 QHttpResponse::~QHttpResponse()
 {
 }

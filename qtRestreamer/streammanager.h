@@ -7,7 +7,7 @@
 #include <QMutexLocker>
 #include <QCoreApplication>
 #include "streamcontroller.h"
-#include "blanksquareseeder.h"
+#include "staticimageseeder.h"
 #include "abstractseeder.h"
 #include "leecher.h"
 
@@ -18,13 +18,16 @@ class StreamManager : public QObject
 public:
 
     static StreamManager * instance();
+    static QString configPath;
+    inline static const QString defaultTag(){return "default";}//="default"
 signals:
 protected:
     StreamManager();
     ~StreamManager();
 
     QMap<QString,StreamController*> activeControllers;
-    BlankSquareSeeder* blankSeeder;
+    QMap<QString,StaticImageSeeder*> staticSeeders;
+
     static StreamManager* m_instance;
     static QMutex smMutex;
 public:

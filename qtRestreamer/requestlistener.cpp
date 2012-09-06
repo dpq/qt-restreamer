@@ -2,7 +2,7 @@
 #include <Logger.h>
 #include <qhttprequest.h>
 #include <qhttpresponse.h>
-#include <qhttpconnection.h>
+
 
 
 #include "leecher.h"
@@ -20,6 +20,7 @@ RequestListener::RequestListener() :
 void RequestListener::processResponce(QHttpRequest* req, QHttpResponse* resp)
 {
     QString oid = req->url().queryItemValue("oid");
+    QString imageTag = req->url().queryItemValue("imagetag");
     LOG_INFO("RequestListener catched connection of type "+req->method());
     if(oid=="")
     {
@@ -31,13 +32,14 @@ void RequestListener::processResponce(QHttpRequest* req, QHttpResponse* resp)
     {
         if(req->method()==QHttpRequest::GET)
         {
-            Leecher* l =new Leecher(resp,oid);
+            Leecher* l =new Leecher(resp,oid,imageTag);
+
             resp->setHeader("Cache-Control", "no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0");
             resp->setHeader("Pragma", "no-cache");
             resp->setHeader("Connection", "keep-alive");
             resp->setHeader("Expires", "Mon, 3 Jan 2000 12:34:56 GMT");
             resp->setHeader("Content-Type", "multipart/x-mixed-replace;boundary="+AbstractSeeder::defaultBoundary);
-
+            resp->setWriteTimeout(10000);
             l->incrementSocketBuffer(resp->writeHead(200));
 
             LOG_INFO("RequestListener - get connection");
@@ -45,7 +47,7 @@ void RequestListener::processResponce(QHttpRequest* req, QHttpResponse* resp)
         else if (req->method()==QHttpRequest::POST)
         {
             new MJpegStreamSeeder(req,oid);
-          //  resp->getConnection()->setReadTimeout(10000);
+            req->setReadTimeout(10000);
             LOG_INFO("RequestListener - post connection");
         }
         else if(req->method()==QHttpRequest::TRACE)

@@ -13,9 +13,13 @@ class Leecher : public QObject,public StreamPoint
 {
     Q_OBJECT
 public:
-    explicit Leecher(QHttpResponse* resp, QString oid);
+    explicit Leecher(QHttpResponse* resp, QString oid, QString imageTag);
     ~Leecher();
     inline void incrementSocketBuffer(qint64 sb){socketBuffer+=sb;}
+    inline const QString getImageTag()const {return staticImageTag;}
+
+
+
 signals:
 protected:
     QHttpResponse* m_resp;
@@ -24,7 +28,7 @@ protected:
     qint64 socketBuffer;
     static const int MAX_BUFFER;
     static const int MAX_FRAMES;
-
+    QString staticImageTag;
     void sendToSocket();
 public slots:
    void data(VideoFrame d);

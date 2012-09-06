@@ -1,5 +1,5 @@
 
-QT       += core network
+QT       += core network xml
 
 QT       -= gui
 
@@ -41,21 +41,21 @@ SOURCES += main.cpp \
     streamcontroller.cpp \
     abstractseeder.cpp \
     leecher.cpp \
-    blanksquareseeder.cpp \
     streammanager.cpp \
-    mjpegstreamseeder.cpp
+    mjpegstreamseeder.cpp \
+    staticimageseeder.cpp
 
 HEADERS += \
     requestlistener.h \
     streamcontroller.h \
     abstractseeder.h \
     leecher.h \
-    blanksquareseeder.h \
     streammanager.h \
     streampoint.h \
     mjpegstreamseeder.h \
     ../http-parser/http_parser.h \
-    videoframe.h
+    videoframe.h \
+    staticimageseeder.h
 
 INCLUDEPATH += $$_PRO_FILE_PWD_/../CuteLogger/include \
                $$_PRO_FILE_PWD_/../qHttpServer \

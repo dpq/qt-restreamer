@@ -26,6 +26,8 @@
 #include <QObject>
 #include <QHash>
 #include <QTcpSocket>
+#include <QTimer>
+
 
 #include <http_parser.h>
 
@@ -62,6 +64,9 @@ private slots:
     void socketStateChanged(QAbstractSocket::SocketState state);
     void forceClose();
     void init();
+    void onDataReadFromSocket();
+    void onDataWrittenToSocket();
+    void onControlTimerTimeout();
 private:
     static const QString flashPolicy;
     static int MessageBegin(http_parser *parser);
@@ -95,6 +100,13 @@ private:
     bool headerParced;
     const QString m_serverDomain;
     QByteArray dataReaded;
+/*maybe unneccesary*/
+    QTimer socketWatcher;
+    quint64 lastRead;
+    quint64 lastWrite;
+    long readTimeout;
+    long writeTimeout;
+    /*eo Unneccesary*/
 };
 
 #endif

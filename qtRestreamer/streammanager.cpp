@@ -1,16 +1,49 @@
 #include "streammanager.h"
+#include <QtXml>
+#include <QFile>
 
 StreamManager::StreamManager() :
     QObject(NULL)
 {
-    blankSeeder= new BlankSquareSeeder(NULL);
-    blankSeeder->moveToThread(QCoreApplication::instance()->thread());
+    QDomDocument domDoc;
+    QFile domSrc(configPath);
+    domSrc.open(QIODevice::ReadOnly);
+    domDoc.setContent(&domSrc);
+    QDomElement de= domDoc.documentElement().firstChildElement("image");
+    do
+    {
+
+        QString tag= de.attribute("tag");
+        QString path= de.attribute("path");
+        StaticImageSeeder* newSeeder=new StaticImageSeeder(tag,path);
+        newSeeder->moveToThread(QCoreApplication::instance()->thread());
+        staticSeeders[tag]= newSeeder;
+
+    }while (!(de=de.nextSiblingElement("image")).isNull());
+
+    if(!staticSeeders.contains(defaultTag()))
+    {
+        qFatal("No default image found!!!");
+    }
+
+
+    //blankSeeder= new StaticImageSeeder(NULL);
+    //blankSeeder->moveToThread(QCoreApplication::instance()->thread());
     this->moveToThread(QCoreApplication::instance()->thread());
 }
 
+
+QString StreamManager::configPath="/etc/QtRestreamerData/placeholders.xml";
+
 StreamManager::~StreamManager()
 {
-    blankSeeder->deleteLater();
+    //blankSeeder->deleteLater();
+    QList<StaticImageSeeder*> vals=staticSeeders.values();
+    QListIterator<StaticImageSeeder*> it(vals);
+    while (it.hasNext())
+    {
+        it.next()->deleteLater();
+    }
 }
 
 
@@ -77,7 +110,15 @@ void StreamManager::reconnectSeeder(AbstractSeeder* oldseeder,AbstractSeeder* ne
      {
          sc= new StreamController();
          activeControllers[s]=sc;
-         sc->seeder=blankSeeder;
+         QString tag = leecher->getImageTag();
+         if(staticSeeders.contains(tag))
+         {
+             sc->seeder=staticSeeders[tag];
+         }
+         else
+         {
+             sc->seeder=staticSeeders[defaultTag()];
+         }
      }
      QObject::connect(sc->seeder,SIGNAL(data(VideoFrame)),leecher,SLOT(data(VideoFrame)),Qt::QueuedConnection);
      sc->leechers.append(leecher);
@@ -95,8 +136,18 @@ void StreamManager::reconnectSeeder(AbstractSeeder* oldseeder,AbstractSeeder* ne
 
          if(sc->leechers.size()>0)
          {
-            reconnectSeeder(sc->seeder,blankSeeder,sc->leechers);
-            sc->seeder=blankSeeder;
+             QString tag = sc->leechers[0]->getImageTag();
+             AbstractSeeder* sdr;
+             if(staticSeeders.contains(tag))
+             {
+                 sdr=staticSeeders[tag];
+             }
+             else
+             {
+                 sdr=staticSeeders[defaultTag()];
+             }
+            reconnectSeeder(sc->seeder,sdr,sc->leechers);
+            sc->seeder=sdr;
          }
          else
          {
@@ -119,7 +170,7 @@ void StreamManager::reconnectSeeder(AbstractSeeder* oldseeder,AbstractSeeder* ne
          sc->leechers.removeAll(leecher);
          if(sc->leechers.size()<=0)
          {
-             if(sc->seeder==blankSeeder)
+             if((staticSeeders.values().contains(qobject_cast<StaticImageSeeder*>(sc->seeder))))
              {
                  activeControllers.remove(s);
                  sc->deleteLater();

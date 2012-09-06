@@ -27,11 +27,13 @@
 #include <QThread>
 #include <QDebug>
 #include <QSemaphore>
+#include <QDateTime>
 
 #include <sys/socket.h>
 
 #include "qhttprequest.h"
 #include "qhttpresponse.h"
+
 
 QHttpConnection::QHttpConnection(QString serverDomain,int socketDescriptor, quint16 serverPort)
     : QObject(NULL)
@@ -41,7 +43,12 @@ QHttpConnection::QHttpConnection(QString serverDomain,int socketDescriptor, quin
     , m_serverPort(serverPort)
     , m_parser(0)
     , headerParced(false)
-    ,m_serverDomain(serverDomain)
+    , m_serverDomain(serverDomain)
+    , lastRead(QDateTime::currentMSecsSinceEpoch())
+    , lastWrite(QDateTime::currentMSecsSinceEpoch())
+    , readTimeout(0)
+    , writeTimeout(0)
+
 {
    // qDebug() << "Got new connection" << socket->peerAddress() << socket->peerPort();
 
@@ -408,3 +415,19 @@ int QHttpConnection::Body(http_parser *parser, const char *at, size_t length)
     emit theConnection->m_request->data(QByteArray(at, length));
     return 0;
 }
+
+void QHttpConnection::onDataReadFromSocket()
+{
+
+}
+
+void QHttpConnection::onDataWrittenToSocket()
+{
+
+}
+
+void QHttpConnection::onControlTimerTimeout()
+{
+
+}
+

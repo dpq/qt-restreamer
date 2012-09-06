@@ -1,13 +1,15 @@
-#include "blanksquareseeder.h"
+#include "staticimageseeder.h"
 #include <QFile>
 #include <Logger.h>
 #include <QCoreApplication>
 
 
-BlankSquareSeeder::BlankSquareSeeder(QObject *parent) :
-    AbstractSeeder(parent)
+StaticImageSeeder::StaticImageSeeder(QString imageTag, QString imagePath, QObject *parent) :
+    AbstractSeeder(parent),m_imageTag(imageTag)
 {
-    QFile f(defaultPath);
+    //imageTag
+
+    QFile f(imagePath);
     if(f.exists())
     {
         f.open(QIODevice::ReadOnly);
@@ -16,7 +18,7 @@ BlankSquareSeeder::BlankSquareSeeder(QObject *parent) :
     }
     else
     {
-        LOG_ERROR("File with blank square absent!!!!");
+        LOG_ERROR("File with tag "+imageTag+" absent!!!! path is "+imagePath);
     }
   //void onTimeout();
    // this->moveToThread(QCoreApplication::instance()->thread());
@@ -25,9 +27,9 @@ BlankSquareSeeder::BlankSquareSeeder(QObject *parent) :
     t.start(200);
 }
 
-const  QString BlankSquareSeeder::defaultPath = "/var/www/WhitePixel45w.jpg";
+//const  QString StaticImageSeeder::defaultPath = "/var/www/WhitePixel45w.jpg";
 
-void BlankSquareSeeder::onTimeout()
+void StaticImageSeeder::onTimeout()
 {
     emit data(VideoFrame(oneImage));
 }
