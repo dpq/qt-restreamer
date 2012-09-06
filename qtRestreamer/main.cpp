@@ -56,6 +56,8 @@ int main(int argc, char *argv[])
 
     bool res = s.listen(5001);
     LOG_INFO(QString("listen status: %1").arg(res));
+    if(res)
+        return a.exec();
 
-    return a.exec();
+    return -1;
 }
