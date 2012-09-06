@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<storage>
+	<image path="/home/raiv/QtRestreamerData/no_movie.jpeg" tag="default"/><!-- never remove default tag!!!-->
+	<image path="/home/raiv/QtRestreamerData/anonymous.jpeg" tag="anonym"/>
+	<image path="/home/raiv/QtRestreamerData/darth-vader-face.jpeg" tag="vader"/>
+</storage>
+
