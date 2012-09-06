@@ -50,6 +50,7 @@ public:
 
     qint64 write(const QByteArray &data);
     void flush();
+    // precision for timeouts is about 50 msecs
     void setReadTimeout(int milliSeconds);
     void setWriteTimeout(int milliSeconds);
 signals:

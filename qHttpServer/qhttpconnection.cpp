@@ -89,6 +89,7 @@ void QHttpConnection::init()
     connect(m_socket, SIGNAL(disconnected()), this, SLOT(socketDisconnected()));
     connect(m_socket, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(socketStateChanged(QAbstractSocket::SocketState)));
 
+
     if (!m_socket->setSocketDescriptor(m_socketDescriptor))
     {
         qDebug()<<"Could not create socket from descriptor!";
@@ -96,15 +97,23 @@ void QHttpConnection::init()
     }
     else
     {
+        connect(&socketWatcher, SIGNAL(timeout()),this,SLOT(onControlTimerTimeout()));
+        connect(m_socket,SIGNAL(bytesWritten(qint64)),this,SLOT(onDataWrittenToSocket()));
+        connect(m_socket,SIGNAL(readyRead()),this,SLOT(onDataReadFromSocket()));
+        socketWatcher.start(50);
         qDebug() << "Got new connection" << m_socket->peerAddress() << m_socket->peerPort();
 
     }
+
+
 }
 
 
 void QHttpConnection::setReadTimeout(int milliSeconds)
 {
-    if(m_socket!= NULL)
+    readTimeout=milliSeconds;
+
+   /* if(m_socket!= NULL)
     {
         int descriptor = m_socket->socketDescriptor();
 
@@ -115,12 +124,13 @@ void QHttpConnection::setReadTimeout(int milliSeconds)
                     sizeof(timeout)) < 0)
               qDebug()<<"Could not set socket read timeout!";
 
-    }
+    }*/
 }
 
 void QHttpConnection::setWriteTimeout(int milliSeconds)
 {
-    if(m_socket!= NULL)
+    writeTimeout=milliSeconds;
+   /* if(m_socket!= NULL)
     {
         int descriptor = m_socket->socketDescriptor();
 
@@ -131,7 +141,7 @@ void QHttpConnection::setWriteTimeout(int milliSeconds)
                     sizeof(timeout)) < 0)
               qDebug()<<"Could not set socket read timeout!";
 
-    }
+    }*/
 }
 
 
@@ -312,6 +322,7 @@ int QHttpConnection::HeadersComplete(http_parser *parser)
     connect(response, SIGNAL(done()), theConnection, SLOT(responseDone()));
     connect(theConnection->m_socket,SIGNAL(bytesWritten(qint64)),response,SIGNAL(bytesWritten(qint64)));
 
+
     // we are good to go!
     emit theConnection->newRequest(theConnection->m_request, response);
     return 0;
@@ -418,16 +429,21 @@ int QHttpConnection::Body(http_parser *parser, const char *at, size_t length)
 
 void QHttpConnection::onDataReadFromSocket()
 {
-
+    lastRead=QDateTime::currentMSecsSinceEpoch();
 }
 
 void QHttpConnection::onDataWrittenToSocket()
 {
-
+    lastWrite=QDateTime::currentMSecsSinceEpoch();
 }
 
 void QHttpConnection::onControlTimerTimeout()
 {
+    // don't worry. Exterminatus!
+    if((readTimeout>0)&&((readTimeout+lastRead)<QDateTime::currentMSecsSinceEpoch()))
+        m_socket->abort();
+    if((writeTimeout>0)&&((writeTimeout+lastWrite)<QDateTime::currentMSecsSinceEpoch()))
+        m_socket->abort();
 
 }
 
