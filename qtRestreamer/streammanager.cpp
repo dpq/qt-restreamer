@@ -152,7 +152,7 @@ void StreamManager::reconnectSeeder(AbstractSeeder* oldseeder,AbstractSeeder* ne
          else
          {
              activeControllers.remove(s);
-             sc->metaObject()->invokeMethod(object, "deleteLater", Qt::QueuedConnection);
+             sc->metaObject()->invokeMethod(sc, "deleteLater", Qt::QueuedConnection);
          }
 
      }
@@ -173,7 +173,7 @@ void StreamManager::reconnectSeeder(AbstractSeeder* oldseeder,AbstractSeeder* ne
              if((staticSeeders.values().contains(qobject_cast<StaticImageSeeder*>(sc->seeder))))
              {
                  activeControllers.remove(s);
-                 sc->metaObject()->invokeMethod(object, "deleteLater", Qt::QueuedConnection);
+                 sc->metaObject()->invokeMethod(sc, "deleteLater", Qt::QueuedConnection);
              }
          }
      }
