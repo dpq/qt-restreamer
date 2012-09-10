@@ -149,6 +149,11 @@ void QHttpServer::setServerDomain(QString sdmn)
     serverDomain=sdmn;
 }
 
+QString QHttpServer::getServerDomain()
+{
+     return serverDomain;
+}
+
 
 bool QHttpServer::listen(quint16 port)
 {

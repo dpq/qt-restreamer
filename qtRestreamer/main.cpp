@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     }
     Logger::registerAppender(consoleAppender);
     std::cout<<QString("Log level set to %1\n").arg(Logger::levelToString (consoleAppender->detailsLevel()) ).toStdString();
-    LOG_INFO("Starting the application");
+    LOG_INFO("Starting the application\n");
 
 
     QHttpServer s(&makeRequestHandler);
@@ -47,13 +47,13 @@ int main(int argc, char *argv[])
     {
         s.setServerDomain(args[pos+1]);
     }
-
+    LOG_INFO("\nServer set to "+s.getServerDomain());
     pos = args.indexOf("-d");
     if((pos>=0)&&(pos<args.size()-1))
     {
         StreamManager::configPath=args[pos+1];
     }
-
+    LOG_INFO("\nConfig path set to "+StreamManager::configPath);
     bool res = s.listen(5001);
     LOG_INFO(QString("listen status: %1").arg(res));
     if(res)

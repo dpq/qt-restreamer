@@ -123,6 +123,7 @@ public:
      */
     QHttpServer(RequestHandlerFactory requestHandler);
     void setServerDomain(QString sdmn);
+    QString getServerDomain();
     virtual ~QHttpServer();
     /*!
      * Sets the request handler which will actually process requests.
