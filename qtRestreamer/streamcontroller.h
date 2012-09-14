@@ -20,6 +20,7 @@ public:
 private:
     explicit StreamController(QObject *parent = 0);
     AbstractSeeder* seeder;
+    QList<AbstractSeeder*> seederCandidates;
     QList<Leecher*> leechers;
 signals:
     

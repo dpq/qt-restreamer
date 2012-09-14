@@ -72,20 +72,30 @@ QMutex StreamManager::smMutex;
      if(activeControllers.contains(s))
      {
          sc=activeControllers[s];
-         reconnectSeeder(sc->seeder,seeder,sc->leechers);
+         if(qobject_cast<StaticImageSeeder*>(sc->seeder)!= NULL)
+         {
+            reconnectSeeder(sc->seeder,seeder,sc->leechers);
+            sc->seeder=seeder;
+         }
+         else
+         {
+             sc->seederCandidates.append(seeder);
+         }
      }
      else
      {
          sc= new StreamController();
          activeControllers[s]=sc;
+         sc->seeder=seeder;
      }
-      sc->seeder=seeder;
+
  }
 
 void StreamManager::reconnectSeeder(AbstractSeeder* oldseeder,AbstractSeeder* newseeder,QList<Leecher*> leechers)
 {
     foreach (Leecher * l , leechers)
     {
+
         QObject::disconnect(oldseeder,SIGNAL(data(VideoFrame)),l,SLOT(data(VideoFrame)));
         QObject::connect(newseeder,SIGNAL(data(VideoFrame)),l,SLOT(data(VideoFrame)),Qt::QueuedConnection);
     }
@@ -134,26 +144,45 @@ void StreamManager::reconnectSeeder(AbstractSeeder* oldseeder,AbstractSeeder* ne
      {
          sc=activeControllers[s];
 
-         if(sc->leechers.size()>0)
+         if(sc->seeder==seeder) // actual seeder
          {
-             QString tag = sc->leechers[0]->getImageTag();
-             AbstractSeeder* sdr;
-             if(staticSeeders.contains(tag))
+             AbstractSeeder* sdr=NULL;
+
+             if(!sc->seederCandidates.isEmpty())
              {
-                 sdr=staticSeeders[tag];
+                 sdr=sc->seederCandidates.takeFirst();
              }
              else
              {
-                 sdr=staticSeeders[defaultTag()];
-             }
-            reconnectSeeder(sc->seeder,sdr,sc->leechers);
-            sc->seeder=sdr;
-         }
-         else
-         {
+                if(sc->leechers.size()>0)
+                {
+                    QString tag = sc->leechers[0]->getImageTag();
+                    if(staticSeeders.contains(tag))
+                    {
+                        sdr=staticSeeders[tag];
+                    }
+                    else
+                    {
+                        sdr=staticSeeders[defaultTag()];
+                    }
+                }
+            }
+            // we need change seeder
+            if(sdr!= NULL)
+            {
+                reconnectSeeder(sc->seeder,sdr,sc->leechers);
+                sc->seeder=sdr;
+            }
+            else
+            {
              activeControllers.remove(s);
              sc->metaObject()->invokeMethod(sc, "deleteLater", Qt::QueuedConnection);
-         }
+            }
+        }
+        else // candidate
+        {
+             sc->seederCandidates.removeAll(seeder);
+        }
 
      }
  }
@@ -168,9 +197,9 @@ void StreamManager::reconnectSeeder(AbstractSeeder* oldseeder,AbstractSeeder* ne
      {
          sc=activeControllers[s];
          sc->leechers.removeAll(leecher);
-         if(sc->leechers.size()<=0)
+         if(sc->leechers.isEmpty())
          {
-             if((staticSeeders.values().contains(qobject_cast<StaticImageSeeder*>(sc->seeder))))
+             if(qobject_cast<StaticImageSeeder*>(sc->seeder)!= NULL)
              {
                  activeControllers.remove(s);
                  sc->metaObject()->invokeMethod(sc, "deleteLater", Qt::QueuedConnection);

@@ -18,6 +18,7 @@ public:
     inline void incrementSocketBuffer(qint64 sb){socketBuffer+=sb;}
     inline const QString getImageTag()const {return staticImageTag;}
 
+    inline const bool getDeletingStatus(){return isDeleting;}
 
 
 signals:
@@ -30,6 +31,7 @@ protected:
     static const int MAX_FRAMES;
     QString staticImageTag;
     void sendToSocket();
+    bool isDeleting;
 public slots:
    void data(VideoFrame d);
    void bytesWritten(qint64 bw);

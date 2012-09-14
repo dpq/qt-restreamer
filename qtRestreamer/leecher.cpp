@@ -4,7 +4,7 @@
 #include <Logger.h>
 
 Leecher::Leecher(QHttpResponse* resp, QString oid, QString imageTag) :
-    QObject(NULL),StreamPoint(),socketBuffer(0),staticImageTag(imageTag)
+    QObject(NULL),StreamPoint(),socketBuffer(0),staticImageTag(imageTag),isDeleting(false)
 {
     m_resp=resp;
     setOid(oid);
@@ -27,7 +27,8 @@ const int Leecher::MAX_FRAMES=1;
 
 Leecher::~Leecher()
 {
-     StreamManager::instance()->leecherGone(this);
+    isDeleting = true;
+    StreamManager::instance()->leecherGone(this);
 }
 
 void Leecher::bytesWritten(qint64 bw)
