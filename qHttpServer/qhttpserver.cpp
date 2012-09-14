@@ -127,19 +127,21 @@ void QHttpServer::incomingConnection(int socketDescriptor)
 
         connect(connection, SIGNAL(newRequest(QHttpRequest*, QHttpResponse*)),
                 r, SLOT(processResponce(QHttpRequest*, QHttpResponse*)), Qt::DirectConnection);
-        connect(connection, SIGNAL(done(QThread*)) , r,SLOT(deleteLater()),Qt::DirectConnection);
+        connect(connection, SIGNAL(done(QThread*)) , r,SLOT(deleteLater()),Qt::QueuedConnection);
         connect(connection, SIGNAL(done(QThread*)) , &threadPool,SLOT(returnThread(QThread*)),Qt::QueuedConnection);
         connect(this, SIGNAL(closeAll()) , connection,SLOT(forceClose()),Qt::QueuedConnection);
 
         connection->moveToThread(t);
         r->moveToThread(t);
-        //setThreadActive(t);
+        connection->metaObject()->invokeMethod(connection,"init",Qt::QueuedConnection); // direct call to init in object's new thread.
+        // connecting signal to slot, emitting signal and disconnecting caused segtaults from time to time.
+        // also, one string is better than three
 
-        //threadPool.
 
-        connect(this,SIGNAL(initConnection()),connection,SLOT(init()));
-        emit initConnection();
-        disconnect(this,SIGNAL(initConnection()),connection,SLOT(init()));
+        // this caused segfaults!
+        //connect(this,SIGNAL(initConnection()),connection,SLOT(init()),Qt::QueuedConnection);
+        //emit initConnection();
+        //disconnect(this,SIGNAL(initConnection()),connection,SLOT(init()));
 
 }
 

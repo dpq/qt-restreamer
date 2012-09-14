@@ -231,7 +231,7 @@ signals:
      *
      */
     //void newRequest(QHttpRequest *request, QHttpResponse *response);
-    void initConnection();
+  //  void initConnection();
     void closeAll();
 protected:
      void incomingConnection(int socketDescriptor);

@@ -269,7 +269,7 @@ void QHttpConnection::responseDone()
 void QHttpConnection::socketDisconnected()
 {
     emit done(QThread::currentThread());
-    deleteLater();
+    metaObject()->invokeMethod(this, "deleteLater", Qt::QueuedConnection);
 }
 
 /********************
@@ -281,7 +281,7 @@ int QHttpConnection::MessageBegin(http_parser *parser)
     theConnection->m_currentHeaders.clear();
     theConnection->m_request = new QHttpRequest(theConnection);
     connect(theConnection,SIGNAL( done(QThread*)),theConnection->m_request,SIGNAL(end()));
-    connect(theConnection,SIGNAL( done(QThread*)),theConnection->m_request,SLOT(deleteLater()));
+    connect(theConnection,SIGNAL( done(QThread*)),theConnection->m_request,SLOT(deleteLater()),Qt::QueuedConnection);
     return 0;
 }
 

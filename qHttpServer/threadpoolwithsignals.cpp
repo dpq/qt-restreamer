@@ -24,7 +24,7 @@ QThread* ThreadPoolWithSignals::reserveThread()
     {
         t = new ControlThread( this/*control.data()*/);
        // t->moveToThread(control.data());
-        connect(t, SIGNAL(finished()), t, SLOT(deleteLater()));
+        connect(t, SIGNAL(finished()), t, SLOT(deleteLater()), Qt::QueuedConnection);
         t->start();
         allThreads.insert(t);
     }

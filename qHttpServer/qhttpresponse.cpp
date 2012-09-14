@@ -155,6 +155,6 @@ qint64 QHttpResponse::end(const QString &data)
 qint64 QHttpResponse::end()
 {
     emit done();
-    deleteLater();
+    metaObject()->invokeMethod(this, "deleteLater", Qt::QueuedConnection);
     return 0;
 }

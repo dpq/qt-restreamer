@@ -9,7 +9,7 @@ MJpegStreamSeeder::MJpegStreamSeeder(QHttpRequest *request,QString oid) :
     m_request=request;
     setOid(oid);
     connect(request,SIGNAL(data(const QByteArray &)),this,SLOT(onData(QByteArray)));
-    connect(request,SIGNAL(end()),this,SLOT(deleteLater()));
+    connect(request,SIGNAL(end()),this,SLOT(deleteLater()), Qt::QueuedConnection);
     //connect(this,SIGNAL(end()),request,SIGNAL(end()));
 
     QByteArray ctype = request->header("content-type").toAscii();
