@@ -1,6 +1,7 @@
 #include "streammanager.h"
 #include <QtXml>
 #include <QFile>
+#include <Logger.h>
 
 StreamManager::StreamManager() :
     QObject(NULL)
