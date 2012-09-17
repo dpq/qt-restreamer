@@ -40,6 +40,8 @@ int main(int argc, char *argv[])
     LOG_INFO("Starting the application\n");
 
 
+
+    LOG_INFO("Creating http server\n");
     QHttpServer s(&makeRequestHandler);
 
     pos = args.indexOf("-s");
@@ -54,6 +56,11 @@ int main(int argc, char *argv[])
         StreamManager::configPath=args[pos+1];
     }
     LOG_INFO("\nConfig path set to "+StreamManager::configPath);
+
+    LOG_INFO("Creating stream manager\n");
+    StreamManager::instance();
+
+
     bool res = s.listen(5001);
     LOG_INFO(QString("listen status: %1").arg(res));
     if(res)
