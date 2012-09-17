@@ -112,8 +112,9 @@ void StreamManager::reconnectSeeder(AbstractSeeder* oldseeder,AbstractSeeder* ne
 {
     foreach (Leecher * l , leechers)
     {
-
+        LOG_DEBUG("StreamManager::reconnectSeeder -disconnecting old");
         QObject::disconnect(oldseeder,SIGNAL(data(VideoFrame)),l,SLOT(data(VideoFrame)));
+        LOG_DEBUG("StreamManager::reconnectSeeder -connecting new");
         QObject::connect(newseeder,SIGNAL(data(VideoFrame)),l,SLOT(data(VideoFrame)),Qt::QueuedConnection);
     }
 }
@@ -221,7 +222,7 @@ void StreamManager::reconnectSeeder(AbstractSeeder* oldseeder,AbstractSeeder* ne
              LOG_DEBUG("Removing seeder with oid = "+s+" - we are just a candidate, so nothing to do here\n");
              sc->seederCandidates.removeAll(seeder);
         }
-
+        LOG_DEBUG("Removing seeder with oid = "+s+" - success!\n");
      }else
      {
          LOG_ERROR("Removing seeder with oid = "+s+" - no controller for seeder!\n");
