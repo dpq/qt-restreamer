@@ -9,7 +9,7 @@
 
 class QHttpResponse;
 
-class Leecher : public QObject,public StreamPoint
+class Leecher : public StreamPoint
 {
     Q_OBJECT
 public:
@@ -18,9 +18,10 @@ public:
     inline void incrementSocketBuffer(qint64 sb){socketBuffer+=sb;}
     inline const QString getImageTag()const {return staticImageTag;}
 
-    inline const bool getDeletingStatus(){return isDeleting;}
+//    inline const bool getDeletingStatus(){return isDeleting;}
 
-
+protected:
+    virtual void unregisterStreamPoint();
 signals:
 protected:
     QHttpResponse* m_resp;
@@ -31,7 +32,7 @@ protected:
     static const int MAX_FRAMES;
     QString staticImageTag;
     void sendToSocket();
-    bool isDeleting;
+    //bool isDeleting;
 public slots:
    void data(VideoFrame d);
    void bytesWritten(qint64 bw);

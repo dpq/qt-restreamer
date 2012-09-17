@@ -50,8 +50,16 @@ StreamManager::~StreamManager()
 }
 
 
+
+
+
+
 StreamManager* StreamManager::m_instance=NULL;
 QMutex StreamManager::smMutex;
+
+
+
+
 //BlankSquareSeeder* StreamManager::blankSeeder;
 
  StreamManager * StreamManager::instance()

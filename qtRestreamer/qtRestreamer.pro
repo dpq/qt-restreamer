@@ -43,7 +43,8 @@ SOURCES += main.cpp \
     leecher.cpp \
     streammanager.cpp \
     mjpegstreamseeder.cpp \
-    staticimageseeder.cpp
+    staticimageseeder.cpp \
+    streampoint.cpp
 
 HEADERS += \
     requestlistener.h \

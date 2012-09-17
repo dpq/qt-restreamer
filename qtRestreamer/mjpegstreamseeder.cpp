@@ -4,12 +4,12 @@
 #include <Logger.h>
 
 MJpegStreamSeeder::MJpegStreamSeeder(QHttpRequest *request,QString oid) :
-    AbstractSeeder(NULL),searchStart(0),startTime(QDateTime::currentMSecsSinceEpoch())
+    AbstractSeeder(),searchStart(0),startTime(QDateTime::currentMSecsSinceEpoch())
 {
     m_request=request;
     setOid(oid);
     connect(request,SIGNAL(data(const QByteArray &)),this,SLOT(onData(QByteArray)));
-    connect(request,SIGNAL(end()),this,SLOT(deleteLater()), Qt::QueuedConnection);
+    connect(request,SIGNAL(end()),this,SLOT(prepareToDie()), Qt::QueuedConnection);
     //connect(this,SIGNAL(end()),request,SIGNAL(end()));
 
     QByteArray ctype = request->header("content-type").toAscii();
@@ -37,10 +37,15 @@ MJpegStreamSeeder::MJpegStreamSeeder(QHttpRequest *request,QString oid) :
 
 }
 
+void MJpegStreamSeeder::unregisterStreamPoint()
+{
+    StreamManager::instance()->seederGone(this);
+}
+
 
 MJpegStreamSeeder::~MJpegStreamSeeder()
 {
-    StreamManager::instance()->seederGone(this);
+
 }
 
 void MJpegStreamSeeder::onTimeout()

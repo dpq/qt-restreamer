@@ -28,6 +28,8 @@ public slots:
     void onData(const QByteArray& data);
 protected slots:
     void onTimeout();
+protected:
+    virtual void unregisterStreamPoint();
 };
 
 #endif // MJPEGSTREAMSEEDER_H

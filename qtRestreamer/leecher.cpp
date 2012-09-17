@@ -4,12 +4,12 @@
 #include <Logger.h>
 
 Leecher::Leecher(QHttpResponse* resp, QString oid, QString imageTag) :
-    QObject(NULL),StreamPoint(),socketBuffer(0),staticImageTag(imageTag),isDeleting(false)
+    StreamPoint(),socketBuffer(0),staticImageTag(imageTag)/*,isDeleting(false)*/
 {
     m_resp=resp;
     setOid(oid);
     //connect(request,SIGNAL(data(const QByteArray &)),this,SIGNAL(data(QByteArray)));
-     connect(m_resp,SIGNAL(done()),this,SLOT(deleteLater()));
+     connect(m_resp,SIGNAL(done()),this,SLOT(prepareToDie()));
      connect(m_resp,SIGNAL(bytesWritten(qint64)),this,SLOT(bytesWritten(qint64)));
 
      if(staticImageTag.isEmpty())
@@ -24,11 +24,16 @@ Leecher::Leecher(QHttpResponse* resp, QString oid, QString imageTag) :
 const int Leecher::MAX_BUFFER=65536;
 const int Leecher::MAX_FRAMES=1;
 
+void Leecher::unregisterStreamPoint()
+{
+    //isDeleting = true;
+    StreamManager::instance()->leecherGone(this);
+}
+
 
 Leecher::~Leecher()
 {
-    isDeleting = true;
-    StreamManager::instance()->leecherGone(this);
+
 }
 
 void Leecher::bytesWritten(qint64 bw)

@@ -11,7 +11,6 @@
 #include "abstractseeder.h"
 #include "leecher.h"
 
-
 class StreamManager : public QObject
 {
     Q_OBJECT

@@ -20,6 +20,8 @@ signals:
     
 protected slots:
   void onTimeout();
+protected:
+    virtual void unregisterStreamPoint(){}
  // void  onItemConnected();
 };
 

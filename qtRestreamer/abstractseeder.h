@@ -5,11 +5,11 @@
 #include "streampoint.h"
 #include "videoframe.h"
 
-class AbstractSeeder : public QObject, public StreamPoint
+class AbstractSeeder : public StreamPoint
 {
     Q_OBJECT
 public:
-    explicit AbstractSeeder(QObject *parent = 0);
+    explicit AbstractSeeder(QObject* parent=NULL);
     virtual ~AbstractSeeder(){}
     static const QString defaultBoundary;
 protected:
