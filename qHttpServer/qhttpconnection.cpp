@@ -44,6 +44,7 @@ QHttpConnection::QHttpConnection(QString serverDomain,int socketDescriptor, quin
     , m_parser(0)
     , headerParced(false)
     , m_serverDomain(serverDomain)
+    , socketWatcher(this)
     , lastRead(QDateTime::currentMSecsSinceEpoch())
     , lastWrite(QDateTime::currentMSecsSinceEpoch())
     , readTimeout(0)
@@ -97,9 +98,11 @@ void QHttpConnection::init()
     }
     else
     {
-        connect(&socketWatcher, SIGNAL(timeout()),this,SLOT(onControlTimerTimeout()));
-        connect(m_socket,SIGNAL(bytesWritten(qint64)),this,SLOT(onDataWrittenToSocket()));
-        connect(m_socket,SIGNAL(readyRead()),this,SLOT(onDataReadFromSocket()));
+        //socketWatcher= new QTimer();
+        //connect(this,SIGNAL(destroyed()),socketWatcher,SLOT(deleteLater()),Qt::DirectConnection);
+        connect(&socketWatcher, SIGNAL(timeout()),this,SLOT(onControlTimerTimeout()),Qt::DirectConnection);
+        connect(m_socket,SIGNAL(bytesWritten(qint64)),this,SLOT(onDataWrittenToSocket()),Qt::DirectConnection);
+        connect(m_socket,SIGNAL(readyRead()),this,SLOT(onDataReadFromSocket()),Qt::DirectConnection);
         socketWatcher.start(50);
         qDebug() << "Got new connection" << m_socket->peerAddress() << m_socket->peerPort();
 

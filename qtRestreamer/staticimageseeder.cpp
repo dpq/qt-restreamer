@@ -5,7 +5,7 @@
 
 
 StaticImageSeeder::StaticImageSeeder(QString imageTag, QString imagePath, QObject *parent) :
-    AbstractSeeder(parent),m_imageTag(imageTag)
+    AbstractSeeder(parent),m_imageTag(imageTag),t(this)
 {
     //imageTag
 
@@ -29,10 +29,10 @@ StaticImageSeeder::StaticImageSeeder(QString imageTag, QString imagePath, QObjec
 
 void StaticImageSeeder::doInit()
 {
-    t= new QTimer();
-    connect(t,SIGNAL(timeout()),this,SLOT(onTimeout()),Qt::QueuedConnection);
-    connect(this,SIGNAL(destroyed()),t,SLOT(deleteLater()));
-    t->start(200);
+    //t= new QTimer(this);
+    connect(&t,SIGNAL(timeout()),this,SLOT(onTimeout()),Qt::QueuedConnection);
+
+    t.start(200);
 }
 
 //const  QString StaticImageSeeder::defaultPath = "/var/www/WhitePixel45w.jpg";

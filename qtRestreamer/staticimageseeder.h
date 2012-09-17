@@ -13,9 +13,10 @@ public:
     explicit StaticImageSeeder(QString imageTag, QString imagePath, QObject *parent = 0);
     inline const QString getTag()const {return m_imageTag;}
 private:
-    QTimer* t;
+
     QByteArray oneImage;
     QString m_imageTag;
+    QTimer t;
     const static QString defaultPath;// = "/var/www/WhitePixel45w.jpg";
 signals:
     

@@ -126,7 +126,7 @@ void QHttpServer::incomingConnection(int socketDescriptor)
         AbstractRequestHandler* r=requestHandler();
 
         connect(connection, SIGNAL(newRequest(QHttpRequest*, QHttpResponse*)),
-                r, SLOT(processResponce(QHttpRequest*, QHttpResponse*)), Qt::DirectConnection);
+                r, SLOT(processResponce(QHttpRequest*, QHttpResponse*)), Qt::QueuedConnection);
         connect(connection, SIGNAL(done(QThread*)) , r,SLOT(deleteLater()),Qt::QueuedConnection);
         connect(connection, SIGNAL(done(QThread*)) , &threadPool,SLOT(returnThread(QThread*)),Qt::QueuedConnection);
         connect(this, SIGNAL(closeAll()) , connection,SLOT(forceClose()),Qt::QueuedConnection);
