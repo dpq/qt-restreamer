@@ -19,6 +19,8 @@ StreamManager::StreamManager() :
         QString path= de.attribute("path");
         StaticImageSeeder* newSeeder=new StaticImageSeeder(tag,path);
         newSeeder->moveToThread(QCoreApplication::instance()->thread());
+        // timers should live in same thread with static image seeders
+        newSeeder->metaObject()->invokeMethod(newSeeder,"doInit",Qt::QueuedConnection);
         staticSeeders[tag]= newSeeder;
 
     }while (!(de=de.nextSiblingElement("image")).isNull());

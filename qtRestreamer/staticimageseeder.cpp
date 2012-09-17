@@ -23,8 +23,16 @@ StaticImageSeeder::StaticImageSeeder(QString imageTag, QString imagePath, QObjec
   //void onTimeout();
    // this->moveToThread(QCoreApplication::instance()->thread());
     oneImage.prepend(QString("--"+defaultBoundary+"\r\nContent-Type: image/jpeg\r\nContent-Length:" + QString("%1").arg(oneImage.size()) + "\r\n\r\n").toAscii());
-    connect(&t,SIGNAL(timeout()),this,SLOT(onTimeout()));
-    t.start(200);
+
+}
+
+
+void StaticImageSeeder::doInit()
+{
+    t= new QTimer();
+    connect(t,SIGNAL(timeout()),this,SLOT(onTimeout()),Qt::QueuedConnection);
+    connect(this,SIGNAL(destroyed()),t,SLOT(deleteLater()));
+    t->start(200);
 }
 
 //const  QString StaticImageSeeder::defaultPath = "/var/www/WhitePixel45w.jpg";
