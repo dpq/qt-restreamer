@@ -110,6 +110,7 @@ QMutex StreamManager::smMutex;
 
 void StreamManager::reconnectSeeder(AbstractSeeder* oldseeder,AbstractSeeder* newseeder,QList<Leecher*> leechers)
 {
+    LOG_DEBUG("StreamManager::reconnectSeeder -start");
     foreach (Leecher * l , leechers)
     {
         LOG_DEBUG("StreamManager::reconnectSeeder -disconnecting old");
@@ -117,6 +118,7 @@ void StreamManager::reconnectSeeder(AbstractSeeder* oldseeder,AbstractSeeder* ne
         LOG_DEBUG("StreamManager::reconnectSeeder -connecting new");
         QObject::connect(newseeder,SIGNAL(data(VideoFrame)),l,SLOT(data(VideoFrame)),Qt::QueuedConnection);
     }
+    LOG_DEBUG("StreamManager::reconnectSeeder -success");
 }
 
 
