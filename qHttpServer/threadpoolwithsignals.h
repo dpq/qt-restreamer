@@ -5,6 +5,7 @@
 
 #include <QSet>
 #include <QTimer>
+#include <QMutex>
 
 class QThread;
 class ControlThread;
@@ -24,6 +25,7 @@ private:
     // deletes thread from inactive threads if any available.
     // void setThreadActive( QThread* ); // adds thread to active threads.
     QTimer cleanupTimer;
+   // QMutex threadMutex;
     //QScopedPointer<ControlThread> control;
     void cleanupThreads();// removes all threads from all lists
  private slots:

@@ -53,22 +53,7 @@ QHttpConnection::QHttpConnection(QString serverDomain,int socketDescriptor, quin
 {
    // qDebug() << "Got new connection" << socket->peerAddress() << socket->peerPort();
 
-    m_parser = (http_parser*)malloc(sizeof(http_parser));
-    http_parser_init(m_parser, HTTP_REQUEST);
 
-    m_parserSettings.on_message_begin = MessageBegin;
-    m_parserSettings.on_path = Path;
-    m_parserSettings.on_query_string = 0;
-   // m_parserSettings.on_query_string = QueryString;
-    m_parserSettings.on_url = Url;
-    m_parserSettings.on_fragment = Fragment;
-    m_parserSettings.on_header_field = HeaderField;
-    m_parserSettings.on_header_value = HeaderValue;
-    m_parserSettings.on_headers_complete = HeadersComplete;
-   // m_parserSettings.on_body = Body;
-    m_parserSettings.on_message_complete = MessageComplete;
-
-    m_parser->data = this;
 
 }
 
@@ -86,13 +71,37 @@ void QHttpConnection::init()
 {
     m_socket= new QTcpSocket(this);
 
-    connect(m_socket, SIGNAL(readyRead()), this, SLOT(parseRequest()));
-    connect(m_socket, SIGNAL(disconnected()), this, SLOT(socketDisconnected()));
-    connect(m_socket, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(socketStateChanged(QAbstractSocket::SocketState)));
+
+
+    if(m_socket)
+    {
+        m_parser = (http_parser*)malloc(sizeof(http_parser));
+        http_parser_init(m_parser, HTTP_REQUEST);
+
+        m_parserSettings.on_message_begin = MessageBegin;
+        m_parserSettings.on_path = Path;
+        m_parserSettings.on_query_string = 0;
+        // m_parserSettings.on_query_string = QueryString;
+        m_parserSettings.on_url = Url;
+        m_parserSettings.on_fragment = Fragment;
+        m_parserSettings.on_header_field = HeaderField;
+        m_parserSettings.on_header_value = HeaderValue;
+        m_parserSettings.on_headers_complete = HeadersComplete;
+        // m_parserSettings.on_body = Body;
+        m_parserSettings.on_message_complete = MessageComplete;
+
+        m_parser->data = this;
+
+
+
+        connect(m_socket, SIGNAL(readyRead()), this, SLOT(parseRequest()));
+        connect(m_socket, SIGNAL(disconnected()), this, SLOT(socketDisconnected()));
+        connect(m_socket, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(socketStateChanged(QAbstractSocket::SocketState)));
 
 
     if (!m_socket->setSocketDescriptor(m_socketDescriptor))
     {
+        m_socket->deleteLater();
         qDebug()<<"Could not create socket from descriptor!";
         socketDisconnected();
     }
@@ -106,6 +115,12 @@ void QHttpConnection::init()
         socketWatcher.start(50);
         qDebug() << "Got new connection" << m_socket->peerAddress() << m_socket->peerPort();
 
+    }
+    }
+    else
+    {
+        qDebug()<<"cannot allocate socket";
+        socketDisconnected();
     }
 
 
@@ -185,11 +200,11 @@ void QHttpConnection::socketStateChanged(QAbstractSocket::SocketState state)
 
 QHttpConnection::~QHttpConnection()
 {
+    if(m_socket)
     delete m_socket;
-    m_socket = 0;
 
+    if(m_parser)
     free(m_parser);
-    m_parser = 0;
 
 }
 

@@ -2,9 +2,10 @@
 #include "controlthread.h"
 #include <QDebug>
 #include <QThread>
+#include <QMutexLocker>
 
 ThreadPoolWithSignals::ThreadPoolWithSignals(QObject *parent) :
-    QObject(parent)/*,control(new ControlThread(this))*/
+    QObject(parent),cleanupTimer(QTimer(this))/*,threadMutex(QMutex(QMutex::Recursive))*//*,control(new ControlThread(this))*/
 {
     //cleanupTimer.setInterval(10000);
     connect(&cleanupTimer,SIGNAL(timeout()),this,SLOT(cleanupIdleThreads()));
@@ -14,6 +15,7 @@ ThreadPoolWithSignals::ThreadPoolWithSignals(QObject *parent) :
 
 QThread* ThreadPoolWithSignals::reserveThread()
 {
+  //  QMutexLocker l(&threadMutex);
     QThread* t;
     if(!idleThreads.isEmpty())
     {
@@ -38,6 +40,7 @@ QThread* ThreadPoolWithSignals::reserveThread()
 
 void ThreadPoolWithSignals::returnThread( QThread* t) // removes thread from active threads and adds it to inactive.
 {
+  //  QMutexLocker l(&threadMutex);
     if(allThreads.contains(t))
     {
         activeThreads.remove(t);
@@ -49,6 +52,7 @@ void ThreadPoolWithSignals::returnThread( QThread* t) // removes thread from act
 
 void ThreadPoolWithSignals::cleanupThreads()
 {
+   // QMutexLocker l(&threadMutex);
     QThread * t;
     foreach(t,allThreads)
     {
@@ -61,6 +65,7 @@ void ThreadPoolWithSignals::cleanupThreads()
 
 void ThreadPoolWithSignals::cleanupIdleThreads()
 {
+   // QMutexLocker l(&threadMutex);
     while (idleThreads.count()>5)
     {
         QThread* t = *(idleThreads.begin());
