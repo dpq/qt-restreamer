@@ -5,7 +5,7 @@
 #include <QMutexLocker>
 
 ThreadPoolWithSignals::ThreadPoolWithSignals(QObject *parent) :
-    QObject(parent),cleanupTimer(QTimer(this))/*,threadMutex(QMutex(QMutex::Recursive))*//*,control(new ControlThread(this))*/
+    QObject(parent),cleanupTimer(this)/*,threadMutex(QMutex(QMutex::Recursive))*//*,control(new ControlThread(this))*/
 {
     //cleanupTimer.setInterval(10000);
     connect(&cleanupTimer,SIGNAL(timeout()),this,SLOT(cleanupIdleThreads()));
