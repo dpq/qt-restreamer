@@ -21,7 +21,7 @@ void RequestListener::processResponce(QHttpRequest* req, QHttpResponse* resp)
 {
     QString oid = req->url().queryItemValue("oid");
     QString imageTag = req->url().queryItemValue("imagetag");
-    LOG_INFO("RequestListener catched connection of type "+req->method());
+    LOG_INFO("RequestListener catched connection of type "+req->method() + "with imagetag = "+ imageTag);
     if(oid=="")
     {
         resp->writeHead(404);
