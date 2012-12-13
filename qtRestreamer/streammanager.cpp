@@ -130,7 +130,7 @@ void StreamManager::reconnectSeeder(AbstractSeeder* oldseeder,AbstractSeeder* ne
 
  void StreamManager::newLeecher(Leecher* leecher)
  {
-     QMutexLocker l (&smMutex);
+     QMutexLocker l (&smMutex) ;
      QString s = leecher->getOid();
      LOG_DEBUG("new Leecher with oid = "+s+"\n");
      Q_ASSERT(s!="");
