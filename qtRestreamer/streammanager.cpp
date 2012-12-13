@@ -139,6 +139,27 @@ void StreamManager::reconnectSeeder(AbstractSeeder* oldseeder,AbstractSeeder* ne
      {
          LOG_DEBUG("Leecher with oid = "+s+"  - controller found\n");
          sc=activeControllers[s];
+         if(qobject_cast<StaticImageSeeder*>(sc->seeder))
+         {
+             LOG_DEBUG("Leecher with oid = "+s+"  - replacing static seeder\n");
+             AbstractSeeder * oldSeeder = sc->seeder;
+             QString tag = leecher->getImageTag();
+             if(staticSeeders.contains(tag))
+             {
+                 LOG_DEBUG("Leecher with oid = "+s+"  - found static image\n");
+                 sc->seeder=staticSeeders[tag];
+             }
+             else
+             {
+                  LOG_DEBUG("Leecher with oid = "+s+"  - no static image? default used\n");
+                 sc->seeder=staticSeeders[defaultTag()];
+             }
+             if(sc->seeder!=oldSeeder)
+             {
+                reconnectSeeder(oldSeeder,sc->seeder,sc->leechers);
+                LOG_DEBUG("Leecher with oid = "+s+"  - static seeder changed\n");
+             }
+         }
      }
      else
      {
