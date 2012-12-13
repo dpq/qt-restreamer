@@ -190,7 +190,7 @@ void StreamManager::reconnectSeeder(AbstractSeeder* oldseeder,AbstractSeeder* ne
                 if(sc->leechers.size()>0)
                 {
                     LOG_DEBUG("Removing seeder with oid = "+s+" - no candidates but we have leechers! Who will feed them?\n");
-                    QString tag = sc->leechers[0]->getImageTag();
+                    QString tag = sc->leechers[sc->leechers.size()-1]->getImageTag();
                     if(staticSeeders.contains(tag))
                     {
                          LOG_DEBUG("Removing seeder with oid = "+s+" - static image to replace seeder found\n");
