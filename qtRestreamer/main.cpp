@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     qRegisterMetaType<QAbstractSocket::SocketState>("QAbstractSocket::SocketState");
     qRegisterMetaType<VideoFrame>("VideoFrame");
     ConsoleAppender* consoleAppender = new ConsoleAppender();
-    consoleAppender->setFormat("[%-7l] <%C> %m\n");
+    consoleAppender->setFormat("%t [%-7l] <%C> %m\n");
     QStringList args = QCoreApplication::arguments();
 
     int pos = args.indexOf("-l");
