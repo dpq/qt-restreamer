@@ -21,6 +21,7 @@
 #include <QSemaphore>
 #include <QDateTime>
 #include <QIODevice>
+#include <QMessageLogContext>
 
 // STL
 #include <iostream>
@@ -72,8 +73,8 @@ class LogDevice : public QIODevice
 
 // Forward declarations
 static void cleanupLoggerPrivate();
-static void qtLoggerMessageHandler(QtMsgType type, const char* msg);
-
+//static void qtLoggerMessageHandler(QtMsgType type, const char* msg);
+static void qtLoggerMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 
 /**
  * LoggerPrivate class implements the Singleton pattern in a thread-safe way. It uses a static pointer to itself
@@ -100,7 +101,7 @@ class LoggerPrivate
       {
         QWriteLocker locker(&m_selfLock);
         m_self = new LoggerPrivate;
-        qInstallMsgHandler(qtLoggerMessageHandler);
+        qInstallMessageHandler(qtLoggerMessageHandler);
         qAddPostRoutine(cleanupLoggerPrivate);
         result = m_self;
       }
@@ -189,7 +190,7 @@ class LoggerPrivate
 
     void write(Logger::LogLevel logLevel, const char* file, int line, const char* function, const char* message)
     {
-      write(logLevel, file, line, function, QString::fromAscii(message));
+      write(logLevel, file, line, function, QString::fromLatin1(message));
     }
 
 
@@ -228,7 +229,7 @@ static void cleanupLoggerPrivate()
 }
 
 
-static void qtLoggerMessageHandler(QtMsgType type, const char* msg)
+static void qtLoggerMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) //const char* msg)
 {
   switch (type)
   {

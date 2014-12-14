@@ -220,7 +220,7 @@ void QHttpConnection::parseRequest()
         if(dataReaded.startsWith("<policy-file-request/>"))
         {
          //   QString toSend = flashPolicy.arg(m_serverPort);
-            m_socket->write(flashPolicy.arg(m_serverDomain).toAscii());
+            m_socket->write(flashPolicy.arg(m_serverDomain).toLatin1());
             m_socket->disconnectFromHost();
         }
         else
@@ -308,7 +308,7 @@ int QHttpConnection::HeadersComplete(http_parser *parser)
     Q_ASSERT(theConnection->m_request);
 
     /** set method **/
-    QString method = QString::fromAscii(http_method_str((enum http_method) parser->method));
+    QString method = QString::fromLatin1(http_method_str((enum http_method) parser->method));
     theConnection->m_request->setMethod(method);
 
     /** set version **/
@@ -361,7 +361,7 @@ int QHttpConnection::Path(http_parser *parser, const char *at, size_t length)
 
     QHttpConnection *theConnection = (QHttpConnection *)parser->data;
     Q_ASSERT(theConnection->m_request);
-    QString path = QString::fromAscii(at, length);
+    QString path = QString::fromLatin1(at, length);
 
     QUrl url = theConnection->m_request->url();
     url.setPath(path);
@@ -375,7 +375,7 @@ int QHttpConnection::QueryString(http_parser *parser, const char *at, size_t len
     Q_UNUSED(length)
     QHttpConnection *theConnection = (QHttpConnection *)parser->data;
     Q_ASSERT(theConnection->m_request);
-   /* QString queryString = QString::fromAscii(at, length);
+   /* QString queryString = QString::fromLatin1(at, length);
 
     QUrl url = theConnection->m_request->url();
     url.ad(queryString);
@@ -386,7 +386,7 @@ int QHttpConnection::QueryString(http_parser *parser, const char *at, size_t len
 
 int QHttpConnection::Url(http_parser *parser, const char *at, size_t length)
 {
-    qDebug() << "URL CALL" << QString::fromAscii(at, length);
+    qDebug() << "URL CALL" << QString::fromLatin1(at, length);
     QHttpConnection *theConnection = (QHttpConnection *)parser->data;
     theConnection->m_request->m_url= QUrl::fromPercentEncoding(QByteArray(at, length));
 
@@ -420,7 +420,7 @@ int QHttpConnection::HeaderField(http_parser *parser, const char *at, size_t len
         theConnection->m_currentHeaderValue = QString();
     }
 
-    QString fieldSuffix = QString::fromAscii(at, length);
+    QString fieldSuffix = QString::fromLatin1(at, length);
     theConnection->m_currentHeaderField += fieldSuffix;
     return 0;
 }
@@ -430,7 +430,7 @@ int QHttpConnection::HeaderValue(http_parser *parser, const char *at, size_t len
     QHttpConnection *theConnection = (QHttpConnection *)parser->data;
     Q_ASSERT(theConnection->m_request);
 
-    QString valueSuffix = QString::fromAscii(at, length);
+    QString valueSuffix = QString::fromLatin1(at, length);
     theConnection->m_currentHeaderValue += valueSuffix;
     return 0;
 }

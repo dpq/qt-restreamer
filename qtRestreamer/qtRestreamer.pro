@@ -1,5 +1,5 @@
 
-QT       += core network xml
+QT       += core network xml websockets
 
 QT       -= gui
 

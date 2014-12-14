@@ -12,7 +12,7 @@ MJpegStreamSeeder::MJpegStreamSeeder(QHttpRequest *request,QString oid) :
     connect(request,SIGNAL(end()),this,SLOT(prepareToDie()), Qt::QueuedConnection);
     //connect(this,SIGNAL(end()),request,SIGNAL(end()));
 
-    QByteArray ctype = request->header("content-type").toAscii();
+    QByteArray ctype = request->header("content-type").toLatin1();
     int bndnameid=ctype.indexOf("boundary=");
     if(bndnameid>0)
     {
@@ -23,7 +23,7 @@ MJpegStreamSeeder::MJpegStreamSeeder(QHttpRequest *request,QString oid) :
         boundary=boundary.prepend("--");
         boundary=boundary.append("\r\n");
     }
-    newBoundary=defaultBoundary.toAscii();
+    newBoundary=defaultBoundary.toLatin1();
     newBoundary=newBoundary.prepend("--");
     newBoundary=newBoundary.append("\r\n");
     if(boundary==newBoundary)

@@ -123,13 +123,13 @@ QString AbstractStringAppender::formattedString(const QDateTime& timeStamp, Logg
 
       // Function name, as returned by Q_FUNC_INFO
       else if (command == QLatin1Char('C'))
-        chunk = QString::fromAscii(function);
+        chunk = QString::fromLatin1(function);
 
       // Stripped function name
       else if (command == QLatin1Char('c'))
       {
         QRegExp rx("^.+\\s([\\w\\d_]+::)?([\\w\\d_]+)(?:\\<[^\\>]\\>)?\\([^\\)]*\\).*$"); // XXX: SLOW!
-        chunk = QString::fromAscii(function).replace(rx, QString(QLatin1String("\\1\\2")));
+        chunk = QString::fromLatin1(function).replace(rx, QString(QLatin1String("\\1\\2")));
       }
 
       // Log message

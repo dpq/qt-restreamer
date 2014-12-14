@@ -22,7 +22,7 @@ StaticImageSeeder::StaticImageSeeder(QString imageTag, QString imagePath, QObjec
     }
   //void onTimeout();
    // this->moveToThread(QCoreApplication::instance()->thread());
-    oneImage.prepend(QString("--"+defaultBoundary+"\r\nContent-Type: image/jpeg\r\nContent-Length:" + QString("%1").arg(oneImage.size()) + "\r\n\r\n").toAscii());
+    oneImage.prepend(QString("--"+defaultBoundary+"\r\nContent-Type: image/jpeg\r\nContent-Length:" + QString("%1").arg(oneImage.size()) + "\r\n\r\n").toLatin1());
 
 }
 

@@ -13,7 +13,7 @@
 
 
 
-Q_DECLARE_METATYPE(QAbstractSocket::SocketState)
+//Q_DECLARE_METATYPE(QAbstractSocket::SocketState)
 Q_DECLARE_METATYPE(VideoFrame)
 
 int main(int argc, char *argv[])

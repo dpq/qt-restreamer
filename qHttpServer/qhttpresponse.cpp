@@ -88,7 +88,7 @@ qint64 QHttpResponse::writeHeaders()
         }
         //TODO: Expect case
 
-        WRITE_HEADER(name.toAscii(), value.toAscii());
+        WRITE_HEADER(name.toLatin1(), value.toLatin1());
     }
 
     if( !m_sentConnectionHeader )
@@ -120,7 +120,7 @@ qint64 QHttpResponse::writeHead(int status)
 {
     if( m_headerWritten ) return 0;
 
-    qint64 result = m_connection->write(QString("HTTP/1.1 %1 %2\r\n").arg(status).arg(STATUS_CODES[status]).toAscii());
+    qint64 result = m_connection->write(QString("HTTP/1.1 %1 %2\r\n").arg(status).arg(STATUS_CODES[status]).toLatin1());
     
     result+=writeHeaders();
 

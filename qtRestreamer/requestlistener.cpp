@@ -2,7 +2,7 @@
 #include <Logger.h>
 #include <qhttprequest.h>
 #include <qhttpresponse.h>
-
+#include <QtWebSockets/QtWebSockets>
 
 
 #include "leecher.h"
@@ -19,8 +19,8 @@ RequestListener::RequestListener() :
 
 void RequestListener::processResponce(QHttpRequest* req, QHttpResponse* resp)
 {
-    QString oid = req->url().queryItemValue("oid");
-    QString imageTag = req->url().queryItemValue("imagetag");
+    QString oid = QUrlQuery(req->url().query()).queryItemValue("oid");
+    QString imageTag = QUrlQuery(req->url().query()).queryItemValue("imagetag");
     LOG_INFO("RequestListener catched connection of type "+req->method() + "with imagetag = "+ imageTag);
     if(oid=="")
     {
